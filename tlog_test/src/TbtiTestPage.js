@@ -5,152 +5,138 @@ const questions = [
   {
     question: '여행지를 고를 때 나는?',
     options: [
-      '블로그 유튜브 다 뒤져서 검증된 곳을 찾는다.',
-      '남들이 잘 모르는 숨은 보석 같은 곳을 찾는다',
+      { text: '블로그 유튜브 다 뒤져서 검증된 곳을 찾는다.', type: 'R' },
+      { text: '남들이 잘 모르는 숨은 보석 같은 곳을 찾는다', type: 'S' },
     ],
   },
   {
     question: '여행 중 출렁다리를 갔는데 친구가 옆에서 넌 절대 못건넌다고 비웃는다 이 때 내 행동은?',
     options: [
-      '쿨한 인정, 깔끔하게 포기한다.',
-      '못건너도 고! 도전해본다.',
+      { text: '쿨한 인정, 깔끔하게 포기한다.', type: 'R' },
+      { text: '못건너도 고! 도전해본다.', type: 'S' },
     ],
   },
   {
     question: '친구가 "저기 골목 안에 숨겨진 카페가 있다는데?" 했을 때,',
     options: [
-      '완전 좋아! 모험 고고!',
-      '음... 리뷰부터 찾아보고 결정하자.',
+      { text: '완전 좋아! 모험 고고!', type: 'S' },
+      { text: '음... 리뷰부터 찾아보고 결정하자.', type: 'R' },
     ],
   },
   {
     question: '어느 날 꿈에서 내가 가장 좋아하는 여행지로 여행을 왔다. 그 장소는?',
     options: [
-      '바다와 산이 공존하는 대자연',
-      '프랑스 파리 한가운데',
-    ],
-  },
-  {
-    question: '어느 날 꿈에서 내가 가장 좋아하는 여행지로 여행을 왔다. 그 장소는?',
-    options: [
-      '바다와 산이 공존하는 대자연',
-      '낭만이 넘치는 상젤리에 거리',
+      { text: '바다와 산이 공존하는 대자연', type: 'E' },
+      { text: '프랑스 파리 한가운데', type: 'O' },
     ],
   },
   {
     question: '여행지에서 제일 먼저 찍고 싶은 인생샷은?',
     options: [
-      '멋진 자연 풍경과 함께 한 컷!',
-      '반짝이는 도시에서 세련된 야경과 함께 한 컷!',
+      { text: '멋진 자연 풍경과 함께 한 컷!', type: 'E' },
+      { text: '반짝이는 도시에서 세련된 야경과 함께 한 컷!', type: 'O' },
     ],
   },
   {
     question: '여행 중 갑자기 현지 축제를 발견했다면?',
     options: [
-      '일정 체크... 가능하면 맞춰보고, 아니면 패스.',
-      '바로 달려간다! 이런 게 진짜 여행이지!',
+      { text: '일정 체크... 가능하면 맞춰보고, 아니면 패스.', type: 'L' },
+      { text: '바로 달려간다! 이런 게 진짜 여행이지!', type: 'N' },
     ],
   },
   {
     question: '여행 일정을 짤 때 나는?',
     options: [
-      '세세하게 계획 짜고 예약까지 이미 완료! 변수 발생 시 플랜 B까지 준비 완료!',
-      '큰 틀만 잡고 가자!',
+      { text: '세세하게 계획 짜고 예약까지 이미 완료!', type: 'L' },
+      { text: '큰 틀만 잡고 가자!', type: 'N' },
     ],
   },
   {
     question: '여행 중 갑자기 비가 온다. 내 선택은?',
     options: [
-      '그럴 일 없어 이미 다 확인하고 왔다. (미리 준비한 실내 코스로 !!)',
-      '비맞아도 괜찮아. 즉흥적으로 다녀보자.',
+      { text: '이미 다 확인하고 왔다. 실내 코스로!', type: 'L' },
+      { text: '비맞아도 괜찮아. 즉흥적으로 다녀보자.', type: 'N' },
     ],
   },
   {
     question: '여행을 시작할 때, ',
     options: [
-      '몇 시에 출발하고, 어디 들를지 시간표까지 짜놓는다.',
-      '일단 떠나고 나서 결정한다. 길이 부르는 대로!',
+      { text: '몇 시에 출발하고 시간표까지 짜놓는다.', type: 'L' },
+      { text: '일단 떠나고 나서 결정한다.', type: 'N' },
     ],
   },
   {
     question: '여행지에 도착했다 당신의 선택은?',
     options: [
-      '여행왔으면 다리를 멈추면 안돼!',
-      '여행은 힐링이지 느긋하게 가자~ ',
+      { text: '여행왔으면 다리를 멈추면 안돼!', type: 'A' },
+      { text: '여행은 힐링이지 느긋하게 가자~', type: 'I' },
     ],
   },
-
   {
     question: '여행지에서의 하루를 상상하면?',
     options: [
-      '액티비티 가득! 레일바이크, 트레킹 다 해보자!',
-      '느긋하게 카페에서 커피 한 잔 하면서 힐링하자!',
-    ],
-  },
-  {
-    question: '여행 중 하루가 비어 있을 때,',
-    options: [
-      '근처 명소나 체험을 찾아서 꼭 무언가를 한다.',
-      '숙소나 카페에서 여유롭게 쉬면서 시간을 보낸다.',
-    ],
-  },
-  {
-    question: '여행지에서 선택해야 한다면,',
-    options: [
-      '액티비티(등산, 서핑, 투어 등)를 즐긴다.',
-      '스파, 독서, 호캉스처럼 편안한 시간을 보낸다.',
+      { text: '액티비티 가득! 레일바이크, 트레킹 다 해보자!', type: 'A' },
+      { text: '느긋하게 카페에서 커피 한 잔 하면서 힐링하자!', type: 'I' },
     ],
   },
   {
     question: '마지막 날 남은 시간이 2시간!! 나의 선택은?',
     options: [
-      '최대한 다 돌아보고 가야 해!! 언능 움직이자!',
-      '그냥 벤치에 앉아서 여유를 즐기자!',
-    ],
-  },
-  {
-    question: '숙소 체크인 후 제일 먼저 하는 일은?',
-    options: [
-      '가방 던지고 바로 나간다',
-      '침대에 푹 파묻힌다',
+      { text: '최대한 다 돌아보고 가야 해!! 언능 움직이자!', type: 'A' },
+      { text: '그냥 벤치에 앉아서 여유를 즐기자!', type: 'I' },
     ],
   },
 ];
 
+function calculateResult(answers) {
+  const counts = {};
+  answers.forEach((type) => {
+    counts[type] = (counts[type] || 0) + 1;
+  });
+
+  const pairs = [
+    ['R', 'S'],
+    ['E', 'O'],
+    ['L', 'N'],
+    ['A', 'I'],
+  ];
+
+  let result = '';
+  pairs.forEach(([a, b]) => {
+    const countA = counts[a] || 0;
+    const countB = counts[b] || 0;
+    result += countA >= countB ? a : b;
+  });
+
+  return { result, counts };
+}
+
 function TbtiQuizPage() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
-
+  const [answers, setAnswers] = useState([]);
+  const navigate = useNavigate();
   const currentQuestion = questions[currentQuestionIndex];
 
   const handleOptionClick = (index) => {
     setSelectedOption(index);
   };
 
-  const navigate = useNavigate();
-
   const handleNextClick = () => {
     if (selectedOption !== null) {
+      const selectedType = currentQuestion.options[selectedOption].type;
+      const updatedAnswers = [...answers, selectedType];
+
       if (currentQuestionIndex < questions.length - 1) {
+        setAnswers(updatedAnswers);
         setCurrentQuestionIndex((prev) => prev + 1);
         setSelectedOption(null);
       } else {
-        navigate('/tlog/tbti/test/result');
+        const { result, counts } = calculateResult(updatedAnswers);
+        navigate('/tlog/tbti/test/result', { state: { result, counts } });
       }
     }
   };
-
-  // const handleNextClick = () => {
-  //   if (selectedOption !== null) {
-  //     if (currentQuestionIndex < questions.length - 1) {
-  //       setCurrentQuestionIndex((prev) => prev + 1);
-  //       setSelectedOption(null); // 다음 질문으로 갈 때 선택 초기화
-  //     } else {
-  //       alert('테스트가 완료되었습니다!');
-  //       // TODO: 결과 페이지로 이동하거나 결과 저장
-  //     }
-  //   }
-  // };
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen bg-white p-5">
@@ -183,7 +169,7 @@ function TbtiQuizPage() {
               }`}
               onClick={() => handleOptionClick(index)}
             >
-              {option}
+              {option.text}
             </button>
           ))}
         </div>
