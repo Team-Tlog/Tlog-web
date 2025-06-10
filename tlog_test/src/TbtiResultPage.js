@@ -1,216 +1,236 @@
-import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import logo from './logo.svg';
+import storeQrcode from './assets/store_qrcode.svg';
+import Iconc from './assets/Iconc.svg';
 
 function TbtiResultPage() {
   const location = useLocation();
-  const navigate = useNavigate();
-  const result = location.state?.result || 'XXXX';
-  const counts = location.state?.counts || {};
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [copied, setCopied] = useState(false); // 복사 알림 상태
+
+  const result = location.state?.result || {};
+  const orderedTraits = ['S-R', 'E-O', 'L-N', 'A-I'];
+  const resultString = orderedTraits
+    .map((trait) => {
+      const value = result[trait] ?? 50;
+      return value.toString().padStart(2, '0');
+    })
+    .join('');
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(resultString).then(() => {
+      setCopied(true); // 알림 활성화
+
+      // setTimeout(() => setCopied(false), 1500); // 1.5초 후 알림 숨김
+    });
+  };
+
 
   const tbtiProfiles = {
-  SELA: {
-    name: 'SELA',
-    title: '안정적인 자연 탐험가',
-    description: `RENA는 계획적이고 자연을 사랑하는 타입이에요. 
-예측 가능한 여행을 좋아하고, 무계획은 스트레스를 유발해요.`,
-    best: 'INFP',
-    worst: 'ENFP',
-  },
-  SELI: {
-    name: 'SELI',
-    title: '액티비티 마스터',
-    description: `JAX는 움직이지 않으면 심심한 타입! 
-레포츠, 익스트림, 새로운 경험에 열정적이에요.`,
-    best: 'ISFJ',
-    worst: 'INFJ',
-  },
-  SENA: {
-    name: 'SENA',
-    title: '다정한 일정 플래너',
-    description: `LIA는 모두가 즐거운 여행을 만들고 싶어해요. 
-계획을 잘 세우고, 모두를 배려하며 움직여요.`,
-    best: 'ISFP',
-    worst: 'INTP',
-  },
-  SENI: {
-    name: 'SENI',
-    title: '즉흥 모험가',
-    description: `NOVA는 현지 축제, 인생샷 스팟을 즐기는 타입!
-즉흥적이고 재밌는 순간을 놓치지 않아요.`,
-    best: 'ISTJ',
-    worst: 'INTJ',
-  },
-  SOLA: {
-    name: 'SOLA',
-    title: '리더십 투어리더',
-    description: `KAI는 효율과 성과 중심의 여행을 선호해요. 
-계획도 빠르게 세우고 리더 역할도 척척!`,
-    best: 'INFP',
-    worst: 'ISFP',
-  },
-  SOLI: {
-    name: 'SOLI',
-    title: '아이디어 뱅크 여행자',
-    description: `RICO는 새로운 것에 대한 호기심이 가득!
-계획보단 영감과 즉흥이 중요해요.`,
-    best: 'ISFJ',
-    worst: 'ISTJ',
-  },
-  SONA: {
-    name: 'SONA',
-    title: '인간관계형 여행 큐레이터',
-    description: `SOO는 사람들과의 조화를 중시해요. 
-누가 힘들어하는지 살피고 모두가 만족하는 여행을 만들어요.`,
-    best: 'INFP',
-    worst: 'ISTP',
-  },
-  SONI: {
-    name: 'SONI',
-    title: '감성 폭발 여행러',
-    description: `MILO는 감성적이고 즉흥적인 여행을 좋아해요. 
-길을 걷다 만난 고양이랑 놀다가 하루가 지나가요.`,
-    best: 'ISFJ',
-    worst: 'ESTJ',
-  },
-  RELA: {
-    name: 'RELA',
-    title: '정석 플래너',
-    description: `ORIN은 디테일한 일정과 안정감을 추구해요. 
-계획대로 움직이지 않으면 불편함을 느낄 수 있어요.`,
-    best: 'ESFP',
-    worst: 'ENFP',
-  },
-  RELI: {
-    name: 'RELI',
-    title: '솔로 여행 장인',
-    description: `DEX는 혼자만의 여행을 즐길 줄 아는 사람! 
-복잡한 일정보단 내 방식대로 움직이는 걸 선호해요.`,
-    best: 'ENFJ',
-    worst: 'ESFJ',
-  },
-  RENA: {
-    name: 'RENA',
-    title: '배려심 깊은 동행자',
-    description: `ELLA는 함께하는 사람들을 챙기며 조용히 리드해요. 
-너무 즉흥적인 일정은 피곤함을 줄 수 있어요.`,
-    best: 'ESFP',
-    worst: 'ENTP',
-  },
-  RENI: {
-    name: 'RENI',
-    title: '감성 자연인',
-    description: `NIA는 숲속 산책과 조용한 해변을 좋아해요. 
-자연 속에서 여유를 찾는 힐링 여행이 딱이에요.`,
-    best: 'ESTJ',
-    worst: 'ENTJ',
-  },
-  ROLA: {
-    name: 'ROLA',
-    title: '전략적 탐험가',
-    description: `LYON은 여행에서도 전략적으로 움직여요. 
-혼자만의 깊은 시간을 중요하게 생각해요.`,
-    best: 'ENFP',
-    worst: 'ESFP',
-  },
-  ROLI: {
-    name: 'ROLI',
-    title: '지적 호기심 여행가',
-    description: `THEO는 유적지, 박물관 등 지식 기반의 여행지를 좋아해요. 
-즉흥적인 여행은 부담스러울 수 있어요.`,
-    best: 'ESFJ',
-    worst: 'ESFP',
-  },
-  RONA: {
-    name: 'RONA',
-    title: '내면의 평화 여행자',
-    description: `RONA은 조용하고 의미 있는 여행을 선호해요. 
-번잡한 도시보다는 영감을 주는 장소를 찾아요.`,
-    best: 'ENFP',
-    worst: 'ESTP',
-  },
-  RONI: {
-    name: 'RONI',
-    title: '감성 힐링러',
-    description: `ARIN은 감성적인 공간과 감동적인 순간을 중요하게 생각해요. 
-자연 속에서 잔잔한 시간을 보내는 걸 좋아해요.`,
-    best: 'ENFJ',
-    worst: 'ESTJ',
-  },
-};
+    SELA: {
+      name: '자연 액티비티 플래너',
+      description: `자연의 아름다움을 온몸으로 느끼며, 친구들과 함께 꼼꼼히 일정을 세우는 계획적인 여행자예요. 산과 바다, 계곡을 돌며 아침부터 저녁까지 액티비티를 빼곡하게 채우고, 사진도 잊지 않고 남겨요. 패러글라이딩, 자전거 여행, 트레킹 등 몸으로 부딪히며 자연을 만끽하는 스타일이에요. 사람들과 함께하는 대화 속에서 에너지를 얻고, 새로운 액티비티를 찾아가며 여행의 재미를 더합니다.`,
+      best: 'RELA (자연 속 사색적 탐험가)',
+      worst: 'RONI (도시 즉흥 휴식가)',
+    },
+    SELI: {
+      name: '자연 속 여유 소통가',
+      description: `자연을 사랑하지만, 액티비티보다는 친구들과 대화하고 소소한 여유를 함께 나누는 걸 좋아해요. 푸른 숲길을 산책하거나 강가에 앉아 커피를 마시며, 자연 속에서의 여유로움을 즐기는 여행자예요. 꼼꼼하게 일정을 세워, 기다리거나 헤매는 일이 없도록 준비하고, 함께하는 시간을 소중히 여겨요. 시끌벅적하기보단 차분한 대화와 자연의 소리를 함께 느끼며, 그 순간을 오래도록 기억에 담습니다.`,
+      best: 'RELI (자연 속 사색적 힐링러)',
+      worst: 'RONA (도시 즉흥 사색가)',
+    },
+    SENA: {
+      name: '자연 속 즉흥 탐험가',
+      description: `자연에서의 자유로운 탐험을 즐기며, 계획보다는 순간의 설렘을 따라가는 여행자예요. 친구들과 함께라면 어디든 모험을 떠날 수 있어요! 바람에 흩날리는 머리카락과 함께 계곡에서 물놀이를 하고, 갑자기 발견한 숲길로 발길을 돌리기도 해요. 자연 속에서 함께 웃고, 새로운 풍경을 발견할 때마다 친구들과 즉흥적으로 길을 바꾸며 여행을 더욱 빛나게 합니다.`,
+      best: 'RENA (자연 속 즉흥 사색가)',
+      worst: 'ROLI (도시 속 사색적 힐링러)',
+    },
+    SENI: {
+      name: '자연 속 즉흥 힐링 메이트',
+      description: `자연의 소리와 공기 속에서 친구들과 함께 여유를 즐기는 여행자예요. 즉흥적으로 돗자리를 펴고, 나무 그늘 아래에서 웃음꽃을 피우며 편안한 시간을 보내요. '꼭 어디를 가야 한다'는 생각보다는, 순간의 분위기에 따라 친구들과 대화를 나누고, 하늘을 올려다보며 한숨 돌립니다. 바쁜 도시에서 벗어나 자연 속에서 즉흥적으로 찾는 휴식이 이들에게 가장 큰 선물이에요.`,
+      best: 'RENI (자연 속 즉흥 휴식가)',
+      worst: 'ROLA (도시 속 사색적 탐험가)',
+    },
+    SOLA: {
+      name: '도시의 열정 탐험가',
+      description: `도시의 불빛과 열기에 빠져, 친구들과 함께 새로운 경험을 찾아가는 계획형 여행자예요. 유명한 명소부터 숨은 핫플까지, 철저히 정보를 모아 일정표를 짜놓고, 그 계획을 따라 움직이며 도시의 활기를 만끽해요. 쇼핑, 맛집, 전시회, 밤거리 산책까지—도시에서 할 수 있는 모든 활동을 사람들과 함께 즐기며, 여행의 추억을 쌓아가는 타입입니다.`,
+      best: 'ROLA (도시 속 사색적 탐험가)',
+      worst: 'RENI (자연 속 즉흥 휴식가)',
+    },
+    SOLI: {
+      name: '도시 속 여유 소통가',
+      description: `도시의 문화와 풍경을 좋아하지만, 시끌벅적한 일정보다는 친구들과 함께 여유롭게 느끼는 여행을 선호해요. 카페에 앉아 긴 대화를 나누거나, 조용한 골목길을 함께 걸으며 도시의 숨은 매력을 찾아보는 스타일이에요. 계획적으로 동선을 짜서, 불필요한 기다림 없이 편안하게 여행을 이어가는 모습이 매력적입니다.`,
+      best: 'ROLI (도시 속 사색적 힐링러)',
+      worst: 'RENA (자연 속 즉흥 사색가)',
+    },
+    SONA: {
+      name: '도시 속 즉흥 모험가',
+      description: `도시의 골목길과 새로운 가게를 발길 닿는 대로 찾아가는 여행자예요. 친구들과 함께라면 지도 없이도 모험할 수 있죠! 즉흥적으로 작은 공연을 발견하거나, 맛있는 냄새가 나는 가게에 들어가는 걸 망설이지 않아요. 새로운 도시의 매력을, 사람들과 함께 나누며 즐겁게 탐험하는 타입이에요.`,
+      best: 'RONA (도시 즉흥 사색가)',
+      worst: 'RELI (자연 속 사색적 힐링러)',
+    },
+    SONI: {
+      name: '도시 속 즉흥 힐링 메이트',
+      description: `도시의 골목과 카페, 공원에서 친구들과 함께 즉흥적으로 여유를 찾는 여행자예요. '여행은 쉼이다'라는 마음으로, 한적한 카페 창가나 조용한 공원 벤치에서 친구들과 긴 수다를 나누며 힐링해요. 도시의 번잡함 속에서도 소소한 여유를 찾는 게 이 여행자들의 행복입니다.`,
+      best: 'RONI (도시 즉흥 휴식가)',
+      worst: 'RELA (자연 속 사색적 탐험가)',
+    },
+    RELA: {
+      name: '자연 속 사색적 탐험가',
+      description: `자연의 숲길을 따라 혼자서 걸으며, 풍경과 내면의 생각을 함께 탐험하는 여행자예요. 꼼꼼하게 코스를 정리해두고, 계획에 따라 걷지만 그 길 위에서 느끼는 고요함을 가장 소중히 여깁니다. 혼자만의 속도로 자연과 나를 연결하며, 산책과 트레킹을 통해 마음을 비워내고 채워가는 스타일이에요.`,
+      best: 'SELA (자연 액티비티 플래너)',
+      worst: 'SONI (도시 즉흥 힐링 메이트)',
+    },
+    RELI: {
+      name: '자연 속 사색적 힐링러',
+      description: `자연 속에서 혼자 여유롭게 머무르며, 나무 그늘 아래서 책을 읽거나 바람을 느끼는 걸 즐겨요. 계획적으로 찾아온 숲이나 호숫가에서 조용히 나만의 시간을 보내고, 자연의 소리를 음미하는 모습이 편안해 보여요. 세상과 거리를 두고 자연과 하나가 되어, 마음의 평화를 찾습니다.`,
+      best: 'SELI (자연 속 여유 소통가)',
+      worst: 'SONA (도시 속 즉흥 모험가)',
+    },
+    RENA: {
+      name: '자연 속 즉흥 사색가',
+      description: `자연의 향기와 소리를 따라, 즉흥적으로 혼자 길을 바꿔가며 여행을 즐기는 타입이에요. 마음이 이끄는 대로 숲길을 걷거나, 바닷가에 앉아 해가 지는 모습을 오래 바라보기도 해요. 계획 없이 떠나온 여정이지만, 그 안에서 오히려 더 깊이 자신을 마주하는 여행자예요.`,
+      best: 'SENA (자연 속 즉흥 탐험가)',
+      worst: 'SOLI (도시 속 여유 소통가)',
+    },
+    RENI: {
+      name: '자연 속 즉흥 휴식가',
+      description: `자연의 품 안에서 혼자만의 휴식을 찾으며, 즉흥적으로 마음이 끌리는 곳에서 여유를 즐기는 여행자예요. 계곡물에 발을 담그거나, 숲길의 벤치에 앉아 멍하니 바람을 느끼며 머무는 시간이 소중해요. 조용히 자연의 품에 안겨, 그 순간을 감성적으로 기록하는 스타일입니다.`,
+      best: 'SENI (자연 속 즉흥 힐링 메이트)',
+      worst: 'SOLA (도시의 열정 탐험가)',
+    },
+    ROLA: {
+      name: '도시 속 사색적 탐험가',
+      description: `도시의 뒷골목과 박물관을 혼자서 계획적으로 탐방하는 여행자예요. 어디서든 새로운 스폿을 찾아, 조용히 사진을 찍고, 분위기를 음미하며 깊은 생각에 잠기곤 해요. 여행지를 찾고 계획을 세우는 그 과정 자체가 이들에게는 또 하나의 여행이자 즐거움입니다.`,
+      best: 'SOLA (도시의 열정 탐험가)',
+      worst: 'SENI (자연 속 즉흥 힐링 메이트)',
+    },
+    ROLI: {
+      name: '도시 속 사색적 힐링러',
+      description: `도시의 조용한 카페나 서점에서 혼자 여유롭게 시간을 보내며, 나만의 리듬을 찾는 여행자예요. 복잡한 계획보다는, 차분히 계획한 코스를 따라 걷고, 느긋하게 차 한 잔을 즐겨요. 도시의 소리와 색을 조용히 관찰하며, 고요한 힐링을 만끽하는 타입이에요.`,
+      best: 'SOLI (도시 속 여유 소통가)',
+      worst: 'SENA (자연 속 즉흥 탐험가)',
+    },
+    RONA: {
+      name: '도시 즉흥 사색가',
+      description: `도시의 골목과 작은 상점, 공방들을 혼자서 즉흥적으로 탐험하는 여행자예요. 발길 닿는 대로 걷고, 마음이 끌리는 곳에 잠시 머물러 도시의 이야기를 듣고 느끼는 걸 좋아해요. 계획보다는 순간의 감각과 대화를 따라 움직이며, 자신만의 시간을 만들어갑니다.`,
+      best: 'SONA (도시 속 즉흥 모험가)',
+      worst: 'SELI (자연 속 여유 소통가)',
+    },
+    RONI: {
+      name: '도시 즉흥 휴식가',
+      description: `도시의 작은 공원이나 카페에서 혼자 즉흥적으로 여유를 즐기며, 도시의 소음을 배경음악 삼아 멍하니 생각에 잠기곤 해요. 사람들로 북적이는 길거리에서 벗어나, 나만의 아늑한 공간을 찾아 숨 고르는 여행자예요. 여행의 목적은 계획이 아닌, 순간의 여유와 쉼이죠.`,
+      best: 'SONI (도시 즉흥 힐링 메이트)',
+      worst: 'SELA (자연 액티비티 플래너)',
+    },
+  };
+  const tbtiName = location.state?.tbti || 'RENA';
+  const tbti = tbtiProfiles[tbtiName] || {};
 
-const profile = tbtiProfiles[result] || tbtiProfiles['XXXX'];
+  const renderGauge = (trait, score) => {
+    const move = score === 50 ? 0 : Math.abs(score - 50);
+    const isLeft = score < 50;
+    return (
+      <div key={trait} className="flex items-center justify-between w-full max-w-xs">
+        <span className="text-xs font-medium w-4">{trait[0]}</span>
+        <div className="relative flex-grow mx-2 h-2 bg-gray-200 rounded overflow-hidden">
+          <div className="absolute left-1/2 top-0 bottom-0 w-0.5" />
+          <div
+            className="absolute top-0 bottom-0 bg-blue-600 rounded"
+            style={{
+              width: `${move}%`,
+              [isLeft ? 'right' : 'left']: '50%',
+            }}
+          ></div>
+        </div>
+        <span className="text-xs font-medium w-4 text-right">{trait[2]}</span>
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center p-6 font-sans">
-      {/* 로고 */}
       <img src={logo} alt="Logo" className="w-32 h-32 mb-4" />
+      <h1 className="text-2xl font-bold text-black mb-2">{tbtiName}</h1>
+      <p className="text-sm text-gray-700 mb-6">{tbti.name}</p>
 
-      {/* 결과 제목 */}
-      <h1 className="text-2xl font-bold text-black mb-2">{profile.name}</h1>
-      <p className="text-sm text-gray-700 mb-6">{profile.title}</p>
-
-      {/* Personality Bars */}
       <div className="w-full max-w-xs space-y-4 mb-6">
-        {[
-          ['R', 'S'],
-          ['E', 'O'],
-          ['L', 'N'],
-          ['A', 'I'],
-        ].map(([a, b], i) => {
-          const countA = counts[a] || 0;
-          const countB = counts[b] || 0;
-          const total = countA + countB || 1;
-          const percent = Math.round((Math.max(countA, countB) / total) * 100);
-          const isA = countA >= countB;
-
-          return (
-            <div key={i} className="flex items-center justify-between">
-              <span className="text-xs font-medium w-5">{a}</span>
-              <div className="relative flex-grow mx-2 h-2 bg-gray-200 rounded overflow-hidden">
-                <div
-                  className={`absolute top-0 bottom-0 bg-blue-600 transition-all duration-300`}
-                  style={{
-                    width: `${percent / 2}%`,
-                    left: '50%',
-                    transform: isA ? 'translateX(-100%)' : 'translateX(0%)',
-                  }}
-                />
-              </div>
-              <span className="text-xs font-medium w-5">{b}</span>
-            </div>
-          );
-        })}
+        {orderedTraits.map((trait) => renderGauge(trait, result[trait] ?? 50))}
       </div>
 
-      {/* 설명 */}
-      <div className="text-xs text-gray-700 leading-relaxed mb-6 text-center whitespace-pre-line">
-        {profile.description}
+      <div className="w-full max-w-xs bg-white-50 rounded-lg p-4 mb-6">
+        <p className="text-xs text-gray-700 leading-relaxed text-left indent-1">
+          {tbti.description}
+        </p>
       </div>
 
-      {/* 잘 맞는 / 안 맞는 TBTI */}
       <div className="w-full max-w-xs flex justify-between mb-6">
         <div className="flex-1 flex flex-col items-center bg-gray-100 rounded-xl p-3 mx-1">
           <p className="text-sm font-semibold mb-2">잘 맞는 TBTI</p>
-          <div className="w-20 h-24 bg-gray-300 rounded-md flex items-center justify-center text-sm font-bold">
-            {profile.best}
+          <img src={logo} alt="결과 아이콘" className="w-15 h-15 mb-2" />
+          <div className="text-xs text-center">
+            <div className="font-medium">{tbti.best?.split(' ')[0]}</div>
+            <div className="mt-1">{tbti.best?.split(' ').slice(1).join(' ')}</div>
           </div>
         </div>
         <div className="flex-1 flex flex-col items-center bg-gray-100 rounded-xl p-3 mx-1">
           <p className="text-sm font-semibold mb-2">안 맞는 TBTI</p>
-          <div className="w-20 h-24 bg-gray-300 rounded-md flex items-center justify-center text-sm font-bold">
-            {profile.worst}
+          <img src={logo} alt="결과 아이콘" className="w-15 h-15 mb-2" />
+          <div className="text-xs text-center">
+            <div className="font-medium">{tbti.worst?.split(' ')[0]}</div>
+            <div className="mt-1">{tbti.worst?.split(' ').slice(1).join(' ')}</div>
           </div>
         </div>
       </div>
 
-      {/* 다시 시작 버튼 */}
-      <button
-        className="w-full max-w-xs bg-indigo-600 text-white py-3 rounded-full text-base font-semibold hover:bg-indigo-700 transition"
-        onClick={() => navigate('/tlog')}
+      {/* 코드 복사 + 알림 메시지 */}
+      <div className="text-base font-semibold text-gray-800 mb-6 flex flex-col items-center space-y-1">
+        <div className="flex items-center space-x-2">
+          <span>코드 : {resultString}</span>
+          <button
+            className="flex items-center justify-center w-6 h-6"
+            onClick={copyToClipboard}
+          >
+            <img src={Iconc} alt="복사" className="w-4 h-4" />
+          </button>
+        </div>
+        {copied && (
+          <p className="text-xs text-green-500">코드가 복사되었습니다!</p>
+        )}
+      </div>
+
+      {/* Tlog 시작하기 버튼: 코드 복사 */}
+      <a
+        href="https://play.google.com/store/search?q=tlog&c=apps&hl=ko"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="w-full max-w-xs bg-indigo-600 text-white py-3 rounded-full text-base font-semibold hover:bg-indigo-700 transition flex items-center justify-center"
+        onClick={(e) => {
+          copyToClipboard();
+        }}
       >
         Tlog 시작하기
-      </button>
+      </a>
+
+      {/* 모달 */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-80 text-center relative">
+            <button
+              className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+              onClick={() => setIsModalOpen(false)}
+            >
+              &#10005;
+            </button>
+            {copied && (
+              <p className="text-xs text-green-500 mb-2">코드가 복사되었습니다!</p>
+            )}
+            <img src={storeQrcode} alt="QR코드" className="mb-4 w-full rounded" />
+            <p className="text-sm text-gray-800 mb-4">Tlog 여행을 떠나볼까요?</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
