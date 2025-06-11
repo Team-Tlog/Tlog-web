@@ -12,7 +12,9 @@ function TbtiQuizPage() {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await axios.get('/api/tbti/user/questions');
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_BASE_URL}/api/tbti/user/questions`
+        );
         if (response.data && response.data.data) {
           setQuestions(response.data.data);
         }
@@ -113,11 +115,10 @@ function TbtiQuizPage() {
           {currentQuestion.answers.map((option, index) => (
             <button
               key={index}
-              className={`p-4 text-left text-base rounded-lg cursor-pointer ${
-                selectedAnswers[currentQuestionIndex] === index
+              className={`p-4 text-left text-base rounded-lg cursor-pointer ${selectedAnswers[currentQuestionIndex] === index
                   ? 'bg-blue-50'
                   : 'bg-gray-50 hover:bg-gray-100'
-              }`}
+                }`}
               onClick={() => handleOptionClick(index)}
             >
               {option.content}
@@ -127,11 +128,10 @@ function TbtiQuizPage() {
 
         {/* "다음" 또는 "완료" 버튼 */}
         <button
-          className={`mt-40 p-4 w-full rounded-lg text-base cursor-pointer ${
-            selectedAnswers[currentQuestionIndex] !== undefined
+          className={`mt-40 p-4 w-full rounded-lg text-base cursor-pointer ${selectedAnswers[currentQuestionIndex] !== undefined
               ? 'bg-blue-600 text-white'
               : 'bg-gray-200 text-gray-700'
-          }`}
+            }`}
           onClick={handleNextClick}
           disabled={selectedAnswers[currentQuestionIndex] === undefined}
         >

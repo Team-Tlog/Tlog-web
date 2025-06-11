@@ -1,7 +1,7 @@
-import logo from './logo.svg';
+
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useState } from 'react';
+
 import TlogStartPage from './TlogStartPage';
 import TbtiTestPage from './TbtiTestPage';
 import TbtiResultPage from './TbtiResultPage';
