@@ -46,7 +46,7 @@ function TbtiQuizPage() {
 
   // 최종 성향별 점수 계산
   const calculateResult = () => {
-    const traitScores = {}; // { 'S-R': { totalWeightedScore: 0, totalWeight: 0 }, ... }
+    const traitScores = {}; // { 'R-S': { totalWeightedScore: 0, totalWeight: 0 }, ... }
 
     questions.forEach((question, idx) => {
       const answerIndex = selectedAnswers[idx];

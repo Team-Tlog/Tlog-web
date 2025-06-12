@@ -7,25 +7,34 @@ import Iconc from './assets/Iconc.svg';
 function TbtiResultPage() {
   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [copied, setCopied] = useState(false); // 복사 알림 상태
+  const [copied, setCopied] = useState(false);
 
   const result = location.state?.result || {};
-  const orderedTraits = ['S-R', 'E-O', 'L-N', 'A-I'];
-  const resultString = orderedTraits
-    .map((trait) => {
-      const value = result[trait] ?? 50;
+  const tbtiName = location.state?.tbti || 'RENA';
+
+
+  const orderedTraitPairs = [
+    ['R', 'S'],
+    ['E', 'O'],
+    ['N', 'L'],
+    ['A', 'I']
+  ];
+
+  const resultString = orderedTraitPairs
+    .map(([left, right]) => {
+      const value = result[`${left}-${right}`] ?? 50;
       return value.toString().padStart(2, '0');
     })
     .join('');
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(resultString).then(() => {
-      setCopied(true); // 알림 활성화
-
-      // setTimeout(() => setCopied(false), 1500); // 1.5초 후 알림 숨김
+      setCopied(true);
     });
   };
 
+  const MainColor = '#3B82F6';
+  const GrayColor = '#E0E0E0';
 
   const tbtiProfiles = {
     SELA: {
@@ -125,26 +134,40 @@ function TbtiResultPage() {
       worst: 'SELA (자연 액티비티 플래너)',
     },
   };
-  const tbtiName = location.state?.tbti || 'RENA';
+
   const tbti = tbtiProfiles[tbtiName] || {};
 
-  const renderGauge = (trait, score) => {
-    const move = score === 50 ? 0 : Math.abs(score - 50);
-    const isLeft = score < 50;
+  const renderStyledProgress = (left, right, value) => {
+    const clampedValue = Math.max(0, Math.min(value, 99)); // 0~99로 제한
+    const percentage = (clampedValue / 99) * 100;
+  
+    const isRightDominant = percentage >= 50;
+  
+    const leftColor = !isRightDominant ? MainColor : 'black';
+    const rightColor = isRightDominant ? MainColor : 'black';
+  
+    const progressColor = MainColor;
+    const trackColor = GrayColor;
+  
+    const progressPercentage = isRightDominant ? percentage : 100 - percentage;
+  
     return (
-      <div key={trait} className="flex items-center justify-between w-full max-w-xs">
-        <span className="text-xs font-medium w-4">{trait[0]}</span>
-        <div className="relative flex-grow mx-2 h-2 bg-gray-200 rounded overflow-hidden">
-          <div className="absolute left-1/2 top-0 bottom-0 w-0.5" />
+      <div key={`${left}-${right}`} className="flex items-center justify-center w-full max-w-md px-6 py-2">
+        <span className="text-sm font-semibold mr-4" style={{ color: leftColor }}>{left}</span>
+        <div className="relative w-full h-2 rounded-full overflow-hidden mx-2">
+          <div className="w-full h-full rounded-full" style={{ backgroundColor: trackColor }}></div>
           <div
-            className="absolute top-0 bottom-0 bg-blue-600 rounded"
+            className="absolute top-0 bottom-0 rounded-full"
             style={{
-              width: `${move}%`,
-              [isLeft ? 'right' : 'left']: '50%',
+              backgroundColor: progressColor,
+              width: `${progressPercentage}%`,
+              left: isRightDominant ? 'auto' : 0,
+              right: isRightDominant ? 0 : 'auto',
+              transition: 'width 0.3s ease'
             }}
           ></div>
         </div>
-        <span className="text-xs font-medium w-4 text-right">{trait[2]}</span>
+        <span className="text-sm font-semibold ml-4" style={{ color: rightColor }}>{right}</span>
       </div>
     );
   };
@@ -155,16 +178,24 @@ function TbtiResultPage() {
       <h1 className="text-2xl font-bold text-black mb-2">{tbtiName}</h1>
       <p className="text-sm text-gray-700 mb-6">{tbti.name}</p>
 
-      <div className="w-full max-w-xs space-y-4 mb-6">
-        {orderedTraits.map((trait) => renderGauge(trait, result[trait] ?? 50))}
+      {/* 성향 바 */}
+      <div className="w-full flex justify-center mb-6">
+        <div className="flex flex-col gap-4 w-full max-w-md px-4">
+          {orderedTraitPairs.map(([left, right]) => {
+            const value = result[`${left}-${right}`] ?? 50;
+            return renderStyledProgress(left, right, value);
+          })}
+        </div>
       </div>
 
+      {/* 설명 */}
       <div className="w-full max-w-xs bg-white-50 rounded-lg p-4 mb-6">
         <p className="text-xs text-gray-700 leading-relaxed text-left indent-1">
           {tbti.description}
         </p>
       </div>
 
+      {/* 성향 맞는 TBTI  */}
       <div className="w-full max-w-xs flex justify-between mb-6">
         <div className="flex-1 flex flex-col items-center bg-gray-100 rounded-xl p-3 mx-1">
           <p className="text-sm font-semibold mb-2">잘 맞는 TBTI</p>
@@ -184,7 +215,7 @@ function TbtiResultPage() {
         </div>
       </div>
 
-      {/* 코드 복사 + 알림 메시지 */}
+      {/* 코드 복사 */}
       <div className="text-base font-semibold text-gray-800 mb-6 flex flex-col items-center space-y-1">
         <div className="flex items-center space-x-2">
           <span>코드 : {resultString}</span>
@@ -195,25 +226,21 @@ function TbtiResultPage() {
             <img src={Iconc} alt="복사" className="w-4 h-4" />
           </button>
         </div>
-        {copied && (
-          <p className="text-xs text-green-500">코드가 복사되었습니다!</p>
-        )}
+        {copied && <p className="text-xs text-green-500">코드가 복사되었습니다!</p>}
       </div>
 
-      {/* Tlog 시작하기 버튼: 코드 복사 */}
+      {/* Tlog 시작 버튼 */}
       <a
         href="https://play.google.com/store/search?q=tlog&c=apps&hl=ko"
         target="_blank"
         rel="noopener noreferrer"
         className="w-full max-w-xs bg-indigo-600 text-white py-3 rounded-full text-base font-semibold hover:bg-indigo-700 transition flex items-center justify-center"
-        onClick={(e) => {
-          copyToClipboard();
-        }}
+        onClick={copyToClipboard}
       >
         Tlog 시작하기
       </a>
 
-      {/* 모달 */}
+      {/* QR코드 모달 */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-80 text-center relative">
@@ -223,9 +250,7 @@ function TbtiResultPage() {
             >
               &#10005;
             </button>
-            {copied && (
-              <p className="text-xs text-green-500 mb-2">코드가 복사되었습니다!</p>
-            )}
+            {copied && <p className="text-xs text-green-500 mb-2">코드가 복사되었습니다!</p>}
             <img src={storeQrcode} alt="QR코드" className="mb-4 w-full rounded" />
             <p className="text-sm text-gray-800 mb-4">Tlog 여행을 떠나볼까요?</p>
           </div>
