@@ -4,14 +4,49 @@ import logo from './logo.svg';
 import storeQrcode from './assets/store_qrcode.svg';
 import Iconc from './assets/Iconc.svg';
 
+import RELA from './assets/RELA.svg';
+import RELI from './assets/RELI.svg';
+import RENA from './assets/RENA.svg';
+import RENI from './assets/RENI.svg';
+import ROLA from './assets/ROLA.svg';
+import ROLI from './assets/ROLI.svg';
+import RONA from './assets/RONA.svg';
+import RONI from './assets/RONI.svg';
+import SELA from './assets/SELA.svg';
+import SELI from './assets/SELI.svg';
+import SENA from './assets/SENA.svg';
+import SENI from './assets/SENI.svg';
+import SOLA from './assets/SOLA.svg';
+import SOLI from './assets/SOLI.svg';
+import SONA from './assets/SONA.svg';
+import SONI from './assets/SONI.svg';
+
 function TbtiResultPage() {
   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const result = location.state?.result || {};
-  const tbtiName = location.state?.tbti || 'RENA';
+  const tbtiName = location.state?.tbti || 'SOLI';
 
+  const tbtiImages = {
+    RELA: RELA,
+    RELI: RELI,
+    RENA: RENA,
+    RENI: RENI,
+    ROLA: ROLA,
+    ROLI: ROLI,
+    RONA: RONA,
+    RONI: RONI,
+    SELA: SELA,
+    SELI: SELI,
+    SENA: SENA,
+    SENI: SENI,
+    SOLA: SOLA,
+    SOLI: SOLI,
+    SONA: SONA,
+    SONI: SONI,
+  };
 
   const orderedTraitPairs = [
     ['R', 'S'],
@@ -137,6 +172,20 @@ function TbtiResultPage() {
 
   const tbti = tbtiProfiles[tbtiName] || {};
 
+  // 현재 TBTI에 맞는 이미지 가져오기
+  const currentTbtiImage = tbtiImages[tbtiName] || logo;
+  
+  // best/worst TBTI 이미지 가져오기
+  const getBestTbtiImage = () => {
+    const bestTbtiCode = tbti.best?.split(' ')[0];
+    return tbtiImages[bestTbtiCode] || logo;
+  };
+  
+  const getWorstTbtiImage = () => {
+    const worstTbtiCode = tbti.worst?.split(' ')[0];
+    return tbtiImages[worstTbtiCode] || logo;
+  };
+
   const renderStyledProgress = (left, right, value) => {
     const clampedValue = Math.max(0, Math.min(value, 99)); // 0~99로 제한
     const percentage = (clampedValue / 99) * 100;
@@ -174,7 +223,7 @@ function TbtiResultPage() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center p-6 font-sans">
-      <img src={logo} alt="Logo" className="w-32 h-32 mb-4" />
+      <img src={currentTbtiImage} alt={`${tbtiName} 이미지`} className="w-32 h-32 mb-4" />
       <h1 className="text-2xl font-bold text-black mb-2">{tbtiName}</h1>
       <p className="text-sm text-gray-700 mb-6">{tbti.name}</p>
 
@@ -199,7 +248,7 @@ function TbtiResultPage() {
       <div className="w-full max-w-xs flex justify-between mb-6">
         <div className="flex-1 flex flex-col items-center bg-gray-100 rounded-xl p-3 mx-1">
           <p className="text-sm font-semibold mb-2">잘 맞는 TBTI</p>
-          <img src={logo} alt="결과 아이콘" className="w-15 h-15 mb-2" />
+          <img src={getBestTbtiImage()} alt="잘 맞는 TBTI 이미지" className="w-15 h-15 mb-2" />
           <div className="text-xs text-center">
             <div className="font-medium">{tbti.best?.split(' ')[0]}</div>
             <div className="mt-1">{tbti.best?.split(' ').slice(1).join(' ')}</div>
@@ -207,7 +256,7 @@ function TbtiResultPage() {
         </div>
         <div className="flex-1 flex flex-col items-center bg-gray-100 rounded-xl p-3 mx-1">
           <p className="text-sm font-semibold mb-2">안 맞는 TBTI</p>
-          <img src={logo} alt="결과 아이콘" className="w-15 h-15 mb-2" />
+          <img src={getWorstTbtiImage()} alt="안 맞는 TBTI 이미지" className="w-15 h-15 mb-2" />
           <div className="text-xs text-center">
             <div className="font-medium">{tbti.worst?.split(' ')[0]}</div>
             <div className="mt-1">{tbti.worst?.split(' ').slice(1).join(' ')}</div>
