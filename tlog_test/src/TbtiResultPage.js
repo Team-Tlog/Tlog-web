@@ -140,7 +140,7 @@ function TbtiResultPage() {
     });
   };
 
-  const MainColor = '#3B82F6';
+  const MainColor = '#3B3BFB';
   const GrayColor = '#E0E0E0';
 
   // 현재 TBTI에 맞는 이미지 가져오기
@@ -161,8 +161,8 @@ function TbtiResultPage() {
   
     const isRightDominant = percentage >= 50;
   
-    const leftColor = !isRightDominant ? MainColor : 'black';
-    const rightColor = isRightDominant ? MainColor : 'black';
+    const leftColor = !isRightDominant ? MainColor : '#989898';
+    const rightColor = isRightDominant ? MainColor : '#989898';
   
     const progressColor = MainColor;
     const trackColor = GrayColor;
@@ -221,10 +221,13 @@ function TbtiResultPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center p-6 font-sans">
-      <img src={currentTbtiImage} alt={`${tbtiName} 이미지`} className="w-32 h-32 mb-4" />
-      <h1 className="text-2xl font-bold text-black mb-2">{tbtiProfile.tbtiString}</h1>
-      <p className="text-sm text-gray-700 mb-6">{tbtiProfile.secondName}</p>
+    <div className="min-h-screen bg-white flex flex-col items-center p-4 font-sans max-w-md mx-auto">
+      {/* 캐릭터 이미지와 타이틀 */}
+      <div className="flex flex-col items-center mb-6 mt-8">
+        <img src={currentTbtiImage} alt={`${tbtiName} 이미지`} className="w-40 h-40 mb-4" />
+        <h1 className="text-3xl font-bold text-black mb-2">{tbtiProfile.tbtiString}</h1>
+        <p className="text-base text-gray-600 mb-4">{tbtiProfile.secondName}</p>
+      </div>
 
       {/* 성향 바 */}
       <div className="w-full flex justify-center mb-6">
@@ -237,44 +240,46 @@ function TbtiResultPage() {
       </div>
 
       {/* 설명 */}
-      <div className="w-full max-w-xs bg-white-50 rounded-lg p-4 mb-6">
-        <p className="text-xs text-gray-700 leading-relaxed text-left indent-1">
+      <div className="w-full bg-white rounded-lg p-6 mb-8">
+        <p className="text-sm text-gray-700 leading-relaxed text-left">
           {tbtiProfile.description}
         </p>
       </div>
 
-      {/* 성향 맞는 TBTI  */}
-      <div className="w-full max-w-xs flex justify-between mb-6">
-        <div className="flex-1 flex flex-col items-center bg-gray-100 rounded-xl p-3 mx-1">
-          <p className="text-sm font-semibold mb-2">잘 맞는 TBTI</p>
-          <img src={getBestTbtiImage()} alt="잘 맞는 TBTI 이미지" className="w-15 h-15 mb-2" />
-          <div className="text-xs text-center">
-            <div className="font-medium">{preferredProfile?.tbtiString}</div>
-            <div className="mt-1">{preferredProfile?.secondName}</div>
+      {/* 잘 맞는/안 맞는 TBTI */}
+      <div className="w-full mb-8">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col items-center bg-gray-50 rounded-xl p-4">
+            <p className="text-sm font-semibold mb-3 text-gray-700">최고의 궁합</p>
+            <img src={getBestTbtiImage()} alt="최고의 궁합" className="w-16 h-16 mb-3" />
+            <div className="text-center">
+              <div className="font-bold text-base" style={{ color: MainColor }}>{preferredProfile?.tbtiString}</div>
+              <div className="text-xs text-gray-600 mt-1">{preferredProfile?.secondName}</div>
+            </div>
           </div>
-        </div>
-        <div className="flex-1 flex flex-col items-center bg-gray-100 rounded-xl p-3 mx-1">
-          <p className="text-sm font-semibold mb-2">안 맞는 TBTI</p>
-          <img src={getWorstTbtiImage()} alt="안 맞는 TBTI 이미지" className="w-15 h-15 mb-2" />
-          <div className="text-xs text-center">
-            <div className="font-medium">{notPreferredProfile?.tbtiString}</div>
-            <div className="mt-1">{notPreferredProfile?.secondName}</div>
+          <div className="flex flex-col items-center bg-gray-50 rounded-xl p-4">
+            <p className="text-sm font-semibold mb-3 text-gray-700">최악의 궁합</p>
+            <img src={getWorstTbtiImage()} alt="최악의 궁합" className="w-16 h-16 mb-3" />
+            <div className="text-center">
+              <div className="font-bold text-base" style={{ color: MainColor }}>{notPreferredProfile?.tbtiString}</div>
+              <div className="text-xs text-gray-600 mt-1">{notPreferredProfile?.secondName}</div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* 코드 복사 */}
-      <div className="text-base font-semibold text-gray-800 mb-6 flex flex-col items-center space-y-1">
-        <div className="flex items-center space-x-2">
-          <span>코드 : {resultString}</span>
+      <div className="mb-6 flex flex-col items-center space-y-2">
+        <div className="flex items-center space-x-3">
+          <span className="text-base font-medium text-gray-800">코드 : {resultString}</span>
           <button
-            className="flex items-center justify-center w-6 h-6"
+            className="flex items-center justify-center w-8 h-8 hover:bg-gray-100 rounded-full transition-colors"
             onClick={copyToClipboard}
           >
-            <img src={Iconc} alt="복사" className="w-4 h-4" />
+            <img src={Iconc} alt="복사" className="w-5 h-5" />
           </button>
         </div>
-        {copied && <p className="text-xs text-green-500">코드가 복사되었습니다!</p>}
+        {copied && <p className="text-sm text-green-600">코드가 복사되었습니다!</p>}
       </div>
 
       {/* Tlog 시작 버튼 */}
@@ -282,10 +287,11 @@ function TbtiResultPage() {
         href="https://play.google.com/store/search?q=tlog&c=apps&hl=ko"
         target="_blank"
         rel="noopener noreferrer"
-        className="w-full max-w-xs bg-indigo-600 text-white py-3 rounded-full text-base font-semibold hover:bg-indigo-700 transition flex items-center justify-center"
-        onClick={copyToClipboard}
+        className="w-full text-white py-4 rounded-2xl text-lg font-bold hover:opacity-90 transition flex items-center justify-center"
+          style={{ backgroundColor: '#4F46E5' }}
+          onClick={copyToClipboard}
       >
-        Tlog 시작하기
+        시작하기
       </a>
 
       {/* QR코드 모달 */}
